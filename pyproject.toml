@@ -21,7 +21,7 @@ dependencies = [
     "moviepy",
     "rich",
     "multimethod>=1.12",
-    "gameworld>=0.1.0",
+    "gameworld @ git+https://github.com/moemoeria/gameworld.git@main",
 ]
 version="0.1.0"
 
