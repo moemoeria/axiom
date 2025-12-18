@@ -636,6 +636,20 @@ def infer_and_update(
         final_carry, _ = jax.lax.scan(grow_body, init_carry, jnp.arange(max_grow_steps))
         return final_carry  # (smm, qx, qz, ell_max, used, tries, done)
 
+    def to_fp32(x):
+        if hasattr(x, 'dtype') and jnp.issubdtype(x.dtype, jnp.floating):
+            return x.astype(jnp.float32)
+        return x
+
+    # 1. 将循环的初始状态变量转为 fp32
+    smm = jax.tree_util.tree_map(to_fp32, smm)
+    qx = jax.tree_util.tree_map(to_fp32, qx)
+    qz = jax.tree_util.tree_map(to_fp32, qz)
+    ell_max = jax.tree_util.tree_map(to_fp32, ell_max)
+    
+    # 2. 将 inputs 也转为 fp32
+    inputs = jax.tree_util.tree_map(to_fp32, inputs)
+
     (
         smm_updated,
         qx_updated,
