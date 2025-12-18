@@ -175,13 +175,12 @@ class MultivariateNormal(ExponentialFamily):
         return self.mu
 
     def statistics(self, x: Array) -> ArrayDict:
-            """
+        """
             Returns the sufficient statistics T(x): [x, -0.5 * xxᵀ]
             ...
             """
-            # [Fix]: Replace @ with jnp.matmul(..., precision=HIGHEST) to avoid XLA layout bug with BF16
-            xxT = jnp.matmul(x, x.mT, precision=jax.lax.Precision.HIGHEST)
-            return ArrayDict(x=x, minus_half_xxT=-0.5 * xxT)
+        xxT = jnp.matmul(x, x.mT, precision=jax.lax.Precision.HIGH)
+        return ArrayDict(x=x, minus_half_xxT=-0.5 * xxT)
 
     def log_measure(self, x: Array) -> Array:
         return -0.5 * self.dim * jnp.log(2 * jnp.pi)

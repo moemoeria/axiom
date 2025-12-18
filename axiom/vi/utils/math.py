@@ -92,10 +92,7 @@ def bdot(x, y):
     # for all leading dimensions.
     # It calculates (..., N, M) @ (..., M, K) -> (..., N, K)
 
-    # [Fix]: 显式指定 precision=lax.Precision.HIGHEST。
-    # 这会强制此操作使用 F32 精度，覆盖全局的 BF16_BF16_F32_X3 设置。
-    # 这样可以绕过 XLA 在处理 Rank-2 张量时的布局推断 Bug。
-    return jnp.matmul(x, y, precision=lax.Precision.HIGHEST)
+    return jnp.matmul(x, y, precision=lax.Precision.HIGH)
 
 
 def positive_leading_eigenvalues(x, iters=10):
