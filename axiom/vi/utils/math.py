@@ -84,22 +84,15 @@ def inv_and_logdet(
 
 
 def bdot(x, y):
-    """Batched dot product using vmap"""
-    assert x.ndim > 1
-    assert y.ndim > 1
-    shape = jnp.broadcast_shapes(x.shape[:-2], y.shape[:-2])
-    x = jnp.broadcast_to(x, shape + x.shape[-2:])
-    y = jnp.broadcast_to(y, shape + y.shape[-2:])
-    z = vmap(jnp.dot)(x.reshape((-1,) + x.shape[-2:]), y.reshape((-1,) + y.shape[-2:]))
-    x_dim = x.shape[-2]
-    y_dim = y.shape[-1]
-    return z.reshape(
-        shape
-        + (
-            x_dim,
-            y_dim,
-        )
-    )
+    """
+    Batched dot product using jnp.matmul.
+    Refactored to remove vmap+reshape which causes layout errors in low-precision modes.
+    """
+    # jnp.matmul (or the @ operator) automatically handles broadcasting
+    # for all leading dimensions.
+    # It calculates (..., N, M) @ (..., M, K) -> (..., N, K)
+    # This is much safer for XLA compilation than manual reshaping.
+    return jnp.matmul(x, y)
 
 
 def positive_leading_eigenvalues(x, iters=10):
