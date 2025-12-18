@@ -92,7 +92,9 @@ def bdot(x, y):
     # for all leading dimensions.
     # It calculates (..., N, M) @ (..., M, K) -> (..., N, K)
     # This is much safer for XLA compilation than manual reshaping.
-    return jnp.matmul(x, y)
+
+    # [Fix]: 使用 einsum 替代 matmul，以避免在 BF16_BF16_F32_X3 模式下出现的 XLA layout 错误
+    return jnp.einsum("...ij,...jk->...ik", x, y)
 
 
 def positive_leading_eigenvalues(x, iters=10):
