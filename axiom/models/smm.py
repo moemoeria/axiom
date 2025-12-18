@@ -529,6 +529,15 @@ def infer_and_update(
         N_tokens = inputs.shape[1]
         inputs = inputs.expand_batch_shape(-1)
 
+    def to_fp32(x):
+        if hasattr(x, 'dtype') and jnp.issubdtype(x.dtype, jnp.floating):
+            return x.astype(jnp.float32)
+        return x
+
+    smm = jax.tree_util.tree_map(to_fp32, smm)
+    inputs = jax.tree_util.tree_map(to_fp32, inputs)
+    qx_prev = jax.tree_util.tree_map(to_fp32, qx_prev)
+
     ### Do E steps to update qx and qz, and to compute the maximum eloglike across components
     e_step_scan_fn = create_e_step_fn(smm, inputs)
 
