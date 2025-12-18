@@ -18,6 +18,7 @@ from jaxtyping import Array
 
 from jax import numpy as jnp
 from jax import random as jr
+import jax
 
 from axiom.vi.utils import params_to_tx, ArrayDict, inv_and_logdet, bdot
 from .base import ExponentialFamily
