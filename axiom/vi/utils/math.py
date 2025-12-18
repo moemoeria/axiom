@@ -91,10 +91,11 @@ def bdot(x, y):
     # jnp.matmul (or the @ operator) automatically handles broadcasting
     # for all leading dimensions.
     # It calculates (..., N, M) @ (..., M, K) -> (..., N, K)
-    # This is much safer for XLA compilation than manual reshaping.
 
-    # [Fix]: 使用 einsum 替代 matmul，以避免在 BF16_BF16_F32_X3 模式下出现的 XLA layout 错误
-    return jnp.einsum("...ij,...jk->...ik", x, y)
+    # [Fix]: 显式指定 precision=lax.Precision.HIGHEST。
+    # 这会强制此操作使用 F32 精度，覆盖全局的 BF16_BF16_F32_X3 设置。
+    # 这样可以绕过 XLA 在处理 Rank-2 张量时的布局推断 Bug。
+    return jnp.matmul(x, y, precision=lax.Precision.HIGHEST)
 
 
 def positive_leading_eigenvalues(x, iters=10):
