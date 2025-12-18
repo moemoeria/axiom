@@ -184,7 +184,8 @@ class MultivariateNormal(ExponentialFamily):
                 'minus_half_xxT':
                     (sample_shape + batch_shape + custom_event_shape + (dim, dim))
         """
-        return ArrayDict(x=x, minus_half_xxT=-0.5 * x @ x.mT)
+        xxT = bdot(x, x.mT)
+        return ArrayDict(x=x, minus_half_xxT=-0.5 * xxT)
 
     def log_measure(self, x: Array) -> Array:
         return -0.5 * self.dim * jnp.log(2 * jnp.pi)
