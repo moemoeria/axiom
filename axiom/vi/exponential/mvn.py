@@ -18,7 +18,7 @@ from jaxtyping import Array
 
 from jax import numpy as jnp
 from jax import random as jr
-import jax
+from jax import lax, jit
 
 from axiom.vi.utils import params_to_tx, ArrayDict, inv_and_logdet, bdot
 from .base import ExponentialFamily
@@ -174,13 +174,14 @@ class MultivariateNormal(ExponentialFamily):
         """
         return self.mu
 
+    @jit
     def statistics(self, x: Array) -> ArrayDict:
         """
             Returns the sufficient statistics T(x): [x, -0.5 * xxᵀ]
             ...
             """
-        xxT = jnp.matmul(x, x.mT)
-        # xxT = jnp.matmul(x, x.mT, precision=jax.lax.Precision.HIGH)
+        # xxT = jnp.matmul(x, x.mT)
+        xxT = jnp.matmul(x, x.mT, precision=jax.lax.Precision.HIGH)
         return ArrayDict(x=x, minus_half_xxT=-0.5 * xxT)
 
     def log_measure(self, x: Array) -> Array:

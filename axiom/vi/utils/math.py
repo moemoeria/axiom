@@ -82,7 +82,7 @@ def inv_and_logdet(
     logdet = jnp.expand_dims(2 * jnp.log(jnp.diagonal(chol[0], axis1=-1, axis2=-2)).sum(-1), (-1, -2))
     return logdet
 
-
+@jit
 def bdot(x, y):
     """
     Batched dot product using jnp.matmul.
@@ -92,8 +92,8 @@ def bdot(x, y):
     # for all leading dimensions.
     # It calculates (..., N, M) @ (..., M, K) -> (..., N, K)
 
-    # return jnp.matmul(x, y, precision=lax.Precision.HIGH)
-    return jnp.matmul(x, y)
+    # return jnp.matmul(x, y)
+    return jnp.matmul(x, y, precision=lax.Precision.HIGH)
 
 
 def positive_leading_eigenvalues(x, iters=10):
