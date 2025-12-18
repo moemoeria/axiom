@@ -92,7 +92,8 @@ def bdot(x, y):
     # for all leading dimensions.
     # It calculates (..., N, M) @ (..., M, K) -> (..., N, K)
 
-    return jnp.matmul(x, y, precision=lax.Precision.HIGH)
+    # return jnp.matmul(x, y, precision=lax.Precision.HIGH)
+    return jnp.matmul(x, y)
 
 
 def positive_leading_eigenvalues(x, iters=10):
