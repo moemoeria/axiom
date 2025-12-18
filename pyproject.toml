@@ -9,7 +9,7 @@ authors = [
 ]
 description = "AXIOM: Learning to Play Games in Minutes with Expanding Object-Centric Models"
 readme = "README.md"
-requires-python = ">=3.10,<3.12"
+requires-python = ">=3.10,<3.13"
 dependencies = [
     "numpy",
     "jax",
