@@ -181,7 +181,7 @@ class MultivariateNormal(ExponentialFamily):
             ...
             """
         # xxT = jnp.matmul(x, x.mT)
-        xxT = jnp.matmul(x, x.mT, precision=jax.lax.Precision.HIGH)
+        xxT = jnp.matmul(x, x.mT, precision=lax.Precision.HIGH)
         return ArrayDict(x=x, minus_half_xxT=-0.5 * xxT)
 
     def log_measure(self, x: Array) -> Array:
