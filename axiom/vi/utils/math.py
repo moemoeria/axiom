@@ -84,7 +84,7 @@ def inv_and_logdet(
 
 
 def bdot(x, y):
-    return jnp.matmul(x, y)
+    return jnp.matmul(x, y, precision=lax.Precision.HIGH)
 
 
 def positive_leading_eigenvalues(x, iters=10):
